@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { api, TransactionPayload } from '@/lib/api';
 
 export default function Home() {
@@ -140,9 +141,15 @@ export default function Home() {
       {response && (
         <div className="mt-4 p-4 bg-green-100 border border-green-300 text-green-800 rounded">
           <h2 className="font-bold mb-2">Response</h2>
-          <pre className="whitespace-pre-wrap text-sm">
+          <pre className="whitespace-pre-wrap text-sm mb-4">
             {JSON.stringify(response, null, 2)}
           </pre>
+          <Link 
+            href={`/summary/${response.userId}`}
+            className="inline-block bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 font-medium"
+          >
+            View User Summary
+          </Link>
         </div>
       )}
     </div>

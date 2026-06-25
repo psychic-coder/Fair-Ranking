@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import useSWR from 'swr';
 import { api, RankingEntry } from '@/lib/api';
 
@@ -12,7 +13,7 @@ export default function RankingPage() {
   const offset = (page - 1) * limit;
 
   // Use SWR for data fetching, caching, and revalidation
-  const { data, error, isLoading, mutate } = useSWR(
+  const { data, error, isLoading, isValidating, mutate } = useSWR(
     [limit, offset],
     fetcher,
     { keepPreviousData: true }
@@ -35,9 +36,9 @@ export default function RankingPage() {
       {error && <div className="p-4 bg-red-100 border border-red-300 text-red-800 rounded">Error: {error.message || 'Failed to load ranking'}</div>}
       
       <div className="overflow-x-auto bg-white rounded shadow relative min-h-[300px]">
-        {isLoading && (
-          <div className="absolute inset-0 bg-white/50 flex items-center justify-center z-10">
-            <span className="text-gray-500 font-medium">Loading...</span>
+        {(isLoading || isValidating) && (
+          <div className="absolute inset-0 bg-white/70 flex items-center justify-center z-10 transition-opacity duration-200 backdrop-blur-[1px]">
+            <span className="text-gray-600 font-medium">Refreshing...</span>
           </div>
         )}
         <table className="min-w-full">
@@ -54,7 +55,11 @@ export default function RankingPage() {
             {data?.ranking.map((entry: RankingEntry) => (
               <tr key={entry.userId} className="border-t hover:bg-gray-50 transition-colors">
                 <td className="p-2 font-medium text-gray-700">{entry.rank}</td>
-                <td className="p-2">{entry.userId}</td>
+                <td className="p-2">
+                  <Link href={`/summary/${entry.userId}`} className="text-blue-600 hover:underline">
+                    {entry.userId}
+                  </Link>
+                </td>
                 <td className="p-2 text-right text-blue-600 font-semibold">{entry.rankScore.toFixed(2)}</td>
                 <td className="p-2 text-right">{entry.totalAmount.toFixed(2)}</td>
                 <td className="p-2 text-right">{entry.transactionCount}</td>
