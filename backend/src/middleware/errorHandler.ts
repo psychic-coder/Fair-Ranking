@@ -18,7 +18,7 @@ export const errorHandler = (
     });
   }
 
-  // Mongoose duplicate key error (unexpected here, but safe)
+
   if ((err as any).code === 11000) {
     return res.status(409).json({
       error: {
@@ -28,8 +28,8 @@ export const errorHandler = (
     });
   }
 
-  // Handle malformed JSON from body-parser
-  if (err.type === 'entity.parse.failed') {
+
+  if ((err as any).type === 'entity.parse.failed') {
     return res.status(400).json({
       error: {
         code: 'INVALID_JSON',
