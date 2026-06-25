@@ -1,0 +1,6 @@
+# Ignore root level OS files
+.DS_Store
+
+# Ignore IDE specific folders
+.vscode/
+.idea/
